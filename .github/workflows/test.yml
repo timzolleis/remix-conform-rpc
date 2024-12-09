@@ -21,6 +21,9 @@ jobs:
         with:
           node-version: '20'
 
+      - name: Set yarn version
+        run: yarn set version berry
+
       - name: Install dependencies
         run: yarn install
 
