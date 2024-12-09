@@ -30,6 +30,7 @@ describe("useAction", () => {
 
   beforeEach(() => {
     (useFetcher as Mock).mockReturnValue(mockFetcher);
+    window.HTMLFormElement.prototype.submit = () => {}
   });
 
   it("should use the onSubmit event on the form", () => {
@@ -47,16 +48,15 @@ describe("useAction", () => {
     const form = result.current.form;
     expect(form.onSubmit).toBeDefined();
     const fields = result.current.fields;
-    const { container } = render(
-      <form {...getFormProps(form)} method={"post"}>
+    const { container, getByTestId } = render(
+      <form {...getFormProps(form)} data-testid={"form"} method={"post"}>
         <input type="text" name={fields.name.name} defaultValue={"value"} />
         <input type="text" name={fields.description.name} defaultValue={"value"} />
         <button type="submit">Submit</button>
       </form>
     );
-    const submitButton = container.querySelector("button[type=\"submit\"]");
     act(() => {
-      fireEvent.click(submitButton!);
+      fireEvent.submit(getByTestId("form"));
     });
     expect(onFormSubmit).toHaveBeenCalledWith(expect.anything(), {
       name: "value",
