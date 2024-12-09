@@ -1,11 +1,11 @@
 {
-  "name": "remix-setup-rpc",
+  "name": "remix-conform-rpc",
   "version": "0.0.1",
   "author": {
     "name": "Tim Zolleis"
   },
   "license": "MIT",
-  "description": "Supercharge your remix actions and loaders with typesafe param and query parsing",
+  "description": "Supercharge your remix actions and loaders with typesafe param and query parsing using conform and zod",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
@@ -19,12 +19,20 @@
     "@remix-run/eslint-config": "^2.2.0",
     "@remix-run/react": "^2.2.0",
     "@remix-run/server-runtime": "^2.2.0",
-    "@types/react": "^18.2.33",
+    "@testing-library/react": "^16.1.0",
+    "@types/add": "^2",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "add": "^2.0.6",
     "eslint": "^8.52.0",
+    "jsdom": "^25.0.1",
     "prettier": "^3.4.2",
-    "react": "^18.2.0",
+    "react": "^18.3.0",
+    "react-dom": "^18.3.0",
     "remix-params-helper": "^0.5.1",
     "typescript": "^5.2.2",
+    "vitest": "^2.1.8",
+    "yarn": "^1.22.22",
     "zod": "^3.22.4"
   },
   "peerDependencies": {
@@ -33,7 +41,6 @@
     "@conform-to/zod": ">=1.2.2",
     "@remix-run/react": ">=2.0.0",
     "@remix-run/server-runtime": ">=2.0.0",
-    "react": ">=18",
     "remix-params-helper": ">=0.5.1",
     "zod": ">=3"
   },
@@ -41,14 +48,15 @@
     "dev": "",
     "build": "rimraf dist && tsup index.ts --format cjs,esm --dts",
     "lint": "tsc",
-    "publish-beta": "npm publish --tag beta"
+    "publish-beta": "npm publish --tag beta",
+    "test": "vitest"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/timzolleis/remix-setup-rpc.git"
+    "url": "git+https://github.com/timzolleis/remix-conform-rpc.git"
   },
-  "homepage": "https://github.com/timzolleis/remix-setup-rpc#readme",
-  "bugs": "https://github.com/timzolleis/remix-setup-rpc/issues",
+  "homepage": "https://github.com/timzolleis/remix-conform-rpc#readme",
+  "bugs": "https://github.com/timzolleis/remix-conform-rpc/issues",
   "keywords": [
     "remix",
     "typescript",
@@ -66,7 +74,8 @@
     "trpc",
     "bouncer",
     "session",
-    "middleware"
+    "middleware",
+    "conform"
   ],
   "sideEffects": false,
   "packageManager": "yarn@4.5.3"
