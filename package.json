@@ -7,7 +7,6 @@
   "license": "MIT",
   "description": "Supercharge your remix actions and loaders with typesafe param and query parsing using conform and zod",
   "main": "dist/index.js",
-  "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "files": [
     "dist"
@@ -45,8 +44,9 @@
   },
   "scripts": {
     "dev": "",
-    "build": "rimraf dist && tsup index.ts --format cjs,esm --dts",
+    "build": "tsc",
     "lint": "tsc",
+    "publish": "npm publish",
     "publish-beta": "npm publish --tag beta",
     "test": "vitest"
   },
