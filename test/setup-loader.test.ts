@@ -20,10 +20,10 @@ describe('setupLoader', () => {
 
   it('should parse params and query successfully', async () => {
     const context = {
-      request: new Request('http://localhost?test=value', { method: 'GET' }),
+      request: new Request('http://localhost?query=value', { method: 'GET' }),
       context: {},
       params: {
-        test: 'value'
+        params: 'value'
       }
     };
     const result = await setupLoader({
@@ -32,15 +32,15 @@ describe('setupLoader', () => {
         return { params, query };
       },
       paramSchema: z.object({
-        test: z.string()
+        params: z.string()
       }),
       querySchema: z.object({
-        test: z.string()
+        query: z.string()
       })
     });
     expect(result).toEqual({
-      params: { test: 'value' },
-      query: { test: 'value' }
+      params: { params: 'value' },
+      query: { query: 'value' }
     });
   });
   it('should throw an error parsing params', async () => {

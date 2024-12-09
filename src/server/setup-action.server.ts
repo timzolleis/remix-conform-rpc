@@ -1,7 +1,7 @@
 import { ActionFunctionArgs } from '@remix-run/server-runtime';
 
 import { parseWithZod } from '@conform-to/zod';
-import { getParamsOrFail } from 'remix-params-helper';
+import { getParamsOrFail, getSearchParamsOrFail } from "remix-params-helper";
 import { z, ZodSchema } from 'zod';
 import { invalidSubmission } from './response.server';
 import { SuccessfulSubmission } from '../utils/submission';
@@ -62,7 +62,7 @@ async function setupAction<
     return invalidSubmission(submission);
   }
   const params = paramSchema ? getParamsOrFail(context.params, paramSchema) : undefined;
-  const query = querySchema ? getParamsOrFail(context.params, querySchema) : undefined;
+  const query = querySchema ? getSearchParamsOrFail(context.request, querySchema) : undefined;
   const mutationArgs: ActionArguments<TSchema, TParamSchema, TQuerySchema> = {
     submission: submission,
     request: context.request,

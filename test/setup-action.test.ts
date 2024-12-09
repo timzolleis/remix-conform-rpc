@@ -31,23 +31,23 @@ describe('setup action', () => {
     formData.append('test', 'data');
     formData.append('checkbox', 'on');
     const context = {
-      request: new Request('http://localhost?test=value', { method: 'POST', body: formData }),
+      request: new Request('http://localhost?query=value', { method: 'POST', body: formData }),
       context: {},
       params: {
-        test: 'value'
+        params: 'value'
       }
     };
     const result = await setupAction({
       context,
       paramSchema: z.object({
-        test: z.string()
+        params: z.string()
       }),
       schema: z.object({
         test: z.string(),
         checkbox: z.boolean()
       }),
       querySchema: z.object({
-        test: z.string()
+        query: z.string()
       }),
       mutation: async ({ submission, params, query }) => {
         return { submission: submission.value, params, query };
@@ -55,8 +55,8 @@ describe('setup action', () => {
     });
     expect(result).toStrictEqual({
       submission: { test: 'data', checkbox: true },
-      params: { test: 'value' },
-      query: { test: 'value' }
+      params: { params: 'value' },
+      query: { query: 'value' }
     });
   });
 
@@ -65,7 +65,7 @@ describe('setup action', () => {
     formData.append('test', 'data');
     formData.append('checkbox', 'on');
     const context = {
-      request: new Request('http://localhost?test=value', { method: 'POST', body: formData }),
+      request: new Request('http://localhost', { method: 'POST', body: formData }),
       context: {},
       params: {}
     };

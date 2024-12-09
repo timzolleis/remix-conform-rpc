@@ -1,8 +1,8 @@
-import { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/server-runtime';
-import { getParamsOrFail } from 'remix-params-helper';
-import { ZodSchema } from 'zod';
-import { errorResponse } from './response.server';
-import { WithParams } from '../utils/with-params';
+import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/server-runtime";
+import { getParamsOrFail, getSearchParamsOrFail } from "remix-params-helper";
+import { ZodSchema } from "zod";
+import { errorResponse } from "./response.server";
+import { WithParams } from "../utils/with-params";
 
 type LoaderArguments<
   TParamSchema extends ZodSchema | undefined,
@@ -11,8 +11,8 @@ type LoaderArguments<
   TParamSchema,
   TQuerySchema,
   {
-    request: LoaderFunctionArgs['request'];
-    context: LoaderFunctionArgs['context'];
+    request: LoaderFunctionArgs["request"];
+    context: LoaderFunctionArgs["context"];
   }
 >;
 
@@ -37,14 +37,14 @@ async function setupLoader<
   TResult,
   TMiddlewareResult
 >({
-  context,
-  querySchema,
-  load,
-  paramSchema,
-  middleware
-}: SetupLoaderArgs<TParamSchema, TQuerySchema, TResult, TMiddlewareResult>) {
+    context,
+    querySchema,
+    load,
+    paramSchema,
+    middleware
+  }: SetupLoaderArgs<TParamSchema, TQuerySchema, TResult, TMiddlewareResult>) {
   const params = paramSchema ? getParamsOrFail(context.params, paramSchema) : undefined;
-  const query = querySchema ? getParamsOrFail(new URL(context.request.url).searchParams, querySchema) : undefined;
+  const query = querySchema ? getSearchParamsOrFail(context.request, querySchema) : undefined;
   const loadArgs: LoaderArguments<TParamSchema, TQuerySchema> = {
     request: context.request,
     context: context.context,
@@ -61,4 +61,5 @@ async function setupLoader<
     return errorResponse({ error });
   }
 }
+
 export { setupLoader };
