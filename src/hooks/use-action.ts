@@ -43,7 +43,7 @@ interface UseActionFormOptions<TAction extends ActionFunction, TSchema extends Z
   extends UseActionOptions<TAction> {
   schema: TSchema;
   onFormSubmit?: (event: FormEvent<HTMLFormElement>, data: z.infer<TSchema>) => void;
-  defaultValue: DefaultValue<TSchema>;
+  defaultValue?: DefaultValue<z.infer<TSchema>>;
 }
 
 function useActionForm<TAction extends ActionFunction, TSchema extends ZodSchema>(
