@@ -1,0 +1,73 @@
+{
+  "name": "remix-setup-rpc",
+  "version": "0.0.1",
+  "author": {
+    "name": "Tim Zolleis"
+  },
+  "license": "MIT",
+  "description": "Supercharge your remix actions and loaders with typesafe param and query parsing",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "devDependencies": {
+    "@conform-to/dom": "^1.2.2",
+    "@conform-to/react": "^1.2.2",
+    "@conform-to/zod": "^1.2.2",
+    "@remix-run/eslint-config": "^2.2.0",
+    "@remix-run/react": "^2.2.0",
+    "@remix-run/server-runtime": "^2.2.0",
+    "@types/react": "^18.2.33",
+    "eslint": "^8.52.0",
+    "prettier": "^3.4.2",
+    "react": "^18.2.0",
+    "remix-params-helper": "^0.5.1",
+    "typescript": "^5.2.2",
+    "zod": "^3.22.4"
+  },
+  "peerDependencies": {
+    "@conform-to/dom": ">=1.2.2",
+    "@conform-to/react": ">=1.2.2",
+    "@conform-to/zod": ">=1.2.2",
+    "@remix-run/react": ">=2.0.0",
+    "@remix-run/server-runtime": ">=2.0.0",
+    "react": ">=18",
+    "remix-params-helper": ">=0.5.1",
+    "zod": ">=3"
+  },
+  "scripts": {
+    "dev": "",
+    "build": "rimraf dist && tsup index.ts --format cjs,esm --dts",
+    "lint": "tsc",
+    "publish-beta": "npm publish --tag beta"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/timzolleis/remix-setup-rpc.git"
+  },
+  "homepage": "https://github.com/timzolleis/remix-setup-rpc#readme",
+  "bugs": "https://github.com/timzolleis/remix-setup-rpc/issues",
+  "keywords": [
+    "remix",
+    "typescript",
+    "typesafe",
+    "zod",
+    "api",
+    "react",
+    "query",
+    "mutation",
+    "action",
+    "loader",
+    "forms",
+    "validation",
+    "form validation",
+    "trpc",
+    "bouncer",
+    "session",
+    "middleware"
+  ],
+  "sideEffects": false,
+  "packageManager": "yarn@4.5.3"
+}
