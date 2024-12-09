@@ -19,32 +19,46 @@ type LoaderArguments<
 interface SetupLoaderArgs<
   TParamSchema extends ZodSchema | undefined,
   TQuerySchema extends ZodSchema | undefined,
-  TResult
+  TResult,
+  TMiddlewareResult
 > {
   context: ActionFunctionArgs;
   paramSchema?: TParamSchema;
-  querySchema?: TParamSchema;
-  load: (args: LoaderArguments<TParamSchema, TQuerySchema>) => Promise<TResult>;
+  querySchema?: TQuerySchema;
+  load: (
+    args: LoaderArguments<TParamSchema, TQuerySchema> & (TMiddlewareResult extends undefined ? {} : TMiddlewareResult)
+  ) => Promise<TResult>;
+  middleware?: (args: LoaderArguments<TParamSchema, TQuerySchema>) => Promise<TMiddlewareResult>;
 }
 
 async function setupLoader<
   TParamSchema extends ZodSchema | undefined,
   TQuerySchema extends ZodSchema | undefined,
-  TResult
->({ context, querySchema, load, paramSchema }: SetupLoaderArgs<TParamSchema, TQuerySchema, TResult>) {
+  TResult,
+  TMiddlewareResult
+>({
+  context,
+  querySchema,
+  load,
+  paramSchema,
+  middleware
+}: SetupLoaderArgs<TParamSchema, TQuerySchema, TResult, TMiddlewareResult>) {
   const params = paramSchema ? getParamsOrFail(context.params, paramSchema) : undefined;
-  const query = querySchema ? getParamsOrFail(context.params, querySchema) : undefined;
+  const query = querySchema ? getParamsOrFail(new URL(context.request.url).searchParams, querySchema) : undefined;
   const loadArgs: LoaderArguments<TParamSchema, TQuerySchema> = {
     request: context.request,
     context: context.context,
     ...(params && { params }),
     ...(query && { query })
   } as LoaderArguments<TParamSchema, TQuerySchema>;
+  const middlewareResult = middleware ? await middleware(loadArgs) : undefined;
   try {
-    return load(loadArgs);
+    return load({ ...loadArgs, ...(middlewareResult as TMiddlewareResult extends undefined ? {} : TMiddlewareResult) });
   } catch (error) {
+    if (error instanceof Response) {
+      throw error;
+    }
     return errorResponse({ error });
   }
 }
-
 export { setupLoader };

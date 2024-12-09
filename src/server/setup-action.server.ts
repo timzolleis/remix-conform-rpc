@@ -26,27 +26,34 @@ interface SetupActionsArgs<
   TSchema extends ZodSchema,
   TParamSchema extends ZodSchema | undefined,
   TQuerySchema extends ZodSchema | undefined,
-  TResult
+  TResult,
+  TMiddlewareResult
 > {
   context: ActionFunctionArgs;
   paramSchema?: TParamSchema;
-  querySchema?: TParamSchema;
+  querySchema?: TQuerySchema;
   schema: TSchema;
-  mutation: (args: ActionArguments<TSchema, TParamSchema, TQuerySchema>) => Promise<TResult>;
+  mutation: (
+    args: ActionArguments<TSchema, TParamSchema, TQuerySchema> &
+      (TMiddlewareResult extends undefined ? {} : TMiddlewareResult)
+  ) => Promise<TResult>;
+  middleware?: (args: ActionArguments<TSchema, TParamSchema, TQuerySchema>) => Promise<TMiddlewareResult>;
 }
 
 async function setupAction<
   TSchema extends ZodSchema,
   TParamSchema extends ZodSchema | undefined,
   TQuerySchema extends ZodSchema | undefined,
-  TResult
+  TResult,
+  TMiddlewareResult
 >({
   context,
   schema,
   mutation,
   querySchema,
-  paramSchema
-}: SetupActionsArgs<TSchema, TParamSchema, TQuerySchema, TResult>) {
+  paramSchema,
+  middleware
+}: SetupActionsArgs<TSchema, TParamSchema, TQuerySchema, TResult, TMiddlewareResult>) {
   const formData = await context.request.formData();
   const submission = parseWithZod(formData, {
     schema
@@ -63,9 +70,16 @@ async function setupAction<
     ...(params && { params }),
     ...(query && { query })
   } as ActionArguments<TSchema, TParamSchema, TQuerySchema>;
+  const middlewareResult = middleware ? await middleware(mutationArgs) : undefined;
   try {
-    return mutation(mutationArgs);
+    return mutation({
+      ...mutationArgs,
+      ...(middlewareResult as TMiddlewareResult extends undefined ? {} : TMiddlewareResult)
+    });
   } catch (error) {
+    if (error instanceof Response) {
+      throw error;
+    }
     return respondWithError(submission.reply(), {
       message: error instanceof Error ? error.message : 'Unknown error'
     });

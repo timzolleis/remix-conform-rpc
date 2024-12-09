@@ -25,4 +25,5 @@ function isErrorResponse<TData>(response: any): response is ErrorResponse<TData>
   return response !== null && 'status' in response && response.status === 'error';
 }
 
-export { respondWithError, isErrorResponse, ErrorResponse };
+export { respondWithError, isErrorResponse };
+export type { ErrorResponse };
