@@ -13,9 +13,9 @@ interface UseActionOptions<TAction extends ActionFunction> {
 
   method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 
-  onSuccess(response: ActionReturnType<TAction>): void;
+  onSuccess?(response: ActionReturnType<TAction>): void;
 
-  onError(response: ErrorResponse<ActionReturnType<TAction>>): void;
+  onError?(response: ErrorResponse<ActionReturnType<TAction>>): void;
 }
 
 function useAction<TAction extends ActionFunction, TSchema extends ZodSchema>(options: UseActionOptions<TAction>) {
@@ -29,9 +29,9 @@ function useAction<TAction extends ActionFunction, TSchema extends ZodSchema>(op
   useEffect(() => {
     if (fetcher.state === 'idle' && fetcher.data) {
       if (isErrorResponse<ActionReturnType<TAction>>(fetcher.data)) {
-        options.onError(fetcher.data);
+        options.onError?.(fetcher.data);
       } else {
-        options.onSuccess(fetcher.data);
+        options.onSuccess?.(fetcher.data);
       }
     }
   }, [fetcher.data]);
