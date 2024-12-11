@@ -58,7 +58,7 @@ async function setupLoader<
     if (error instanceof Response) {
       throw error;
     }
-    return errorResponse({ error });
+    throw errorResponse({ error });
   }
 }
 
