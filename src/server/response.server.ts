@@ -1,6 +1,5 @@
-import { SuccessfulSubmission } from '../utils/submission';
 import { data } from '@remix-run/server-runtime';
-import { Submission } from '@conform-to/dom';
+import type { Submission } from '@conform-to/dom';
 
 function errorResponse<T>({
   submission,

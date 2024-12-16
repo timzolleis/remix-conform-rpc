@@ -1,8 +1,8 @@
-import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/server-runtime";
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/server-runtime";
 import { getParamsOrFail, getSearchParamsOrFail } from "remix-params-helper";
 import { ZodSchema } from "zod";
-import { errorResponse } from "./response.server";
-import { WithParams } from "../utils/with-params";
+import { errorResponse } from "./response.server.js";
+import type { WithParams } from "../utils/with-params.js";
 
 type LoaderArguments<
   TParamSchema extends ZodSchema | undefined,

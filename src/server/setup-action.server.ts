@@ -1,12 +1,12 @@
-import { ActionFunctionArgs } from '@remix-run/server-runtime';
+import type { ActionFunctionArgs } from '@remix-run/server-runtime';
 
 import { parseWithZod } from '@conform-to/zod';
 import { getParamsOrFail, getSearchParamsOrFail } from "remix-params-helper";
 import { z, ZodSchema } from 'zod';
-import { invalidSubmission } from './response.server';
-import { SuccessfulSubmission } from '../utils/submission';
-import { WithParams } from '../utils/with-params';
-import { respondWithError } from '../utils/error';
+import { invalidSubmission } from './response.server.js';
+import type { SuccessfulSubmission } from '../utils/submission.js';
+import type { WithParams } from '../utils/with-params.js';
+import { respondWithError } from '../utils/error.js';
 
 type ActionArguments<
   TSchema extends ZodSchema,

@@ -1,4 +1,4 @@
-import { isErrorResponse } from '../src/utils/error';
+import { isErrorResponse } from '../src/utils/error.js';
 import { it, describe, expect } from 'vitest';
 
 describe('it should classify responses as error or not', () => {

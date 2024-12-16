@@ -35,7 +35,7 @@ yarn add remix-conform-rpc zod remix-params-helper @conform-to/react @conform-to
 You can define a loader by calling the `setupLoader` function and passing an object with a `load` function.
 
 ```typescript
-import { setupLoader } from "remix-conform-rpc";
+import { setupLoader } from "remix-conform-rpc/server/loader";
 
 export const loader = setupLoader({
   load: async ({ context, request }) => {
@@ -52,7 +52,7 @@ Once you define a param or query schema, the object becomes available in the `pa
 function.
 
 ```typescript
-import { setupLoader } from "remix-conform-rpc";
+import { setupLoader } from "remix-conform-rpc/server/loader";
 import { z } from "zod";
 
 export const loader = setupLoader({
@@ -77,7 +77,7 @@ You can run middleware before your loader. Anything you return from your middlew
 functions arguments.
 
 ```typescript
-import { setupLoader } from "remix-conform-rpc";
+import { setupLoader } from "remix-conform-rpc/server/loader";
 import { z } from "zod";
 
 export const loader = setupLoader({
@@ -99,7 +99,7 @@ export const loader = setupLoader({
 Define a loader with a zod schema to parse and validate the form data body.
 
 ```typescript
-import { setupAction } from "remix-conform-rpc";
+import { setupAction } from "remix-conform-rpc/server/action";
 import { z } from "zod";
 
 export const action = setupAction({
@@ -132,7 +132,7 @@ export const action = setupAction({
 The same way you can define loaders, you can define actions with params, query and middleware.
 
 ```typescript
-import { setupAction } from "remix-conform-rpc";
+import { setupAction } from "remix-conform-rpc/server/action";
 import { z } from "zod";
 
 export const action = setupAction({
@@ -163,7 +163,7 @@ While you can use standard html forms to submit data, you can also enhance your 
 hook.
 
 ```tsx
-import { useAction } from "remix-conform-rpc";
+import { useAction } from "remix-conform-rpc/hooks/action";
 import { z } from "zod";
 
 
@@ -199,7 +199,7 @@ submit({
 You can also leverage typesafe form creating using the `useActionForm` hook.
 
 ```tsx
-import { useActionForm } from "remix-conform-rpc";
+import { useActionForm } from "remix-conform-rpc/hooks/action";
 import { z } from "zod";
 
 const formSchema = z.object({

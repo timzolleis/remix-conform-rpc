@@ -1,9 +1,10 @@
-import { useActionForm } from "../src/hooks/use-action";
-import { beforeEach, describe, expect, it, vi, Mock } from "vitest";
+import { useActionForm } from "../src/hooks/use-action.js";
+import { beforeEach, describe, expect, it, vi, type Mock } from "vitest";
 import { useFetcher } from "@remix-run/react";
 import { act, fireEvent, render, renderHook } from "@testing-library/react";
 import { z } from "zod";
 import { getFormProps } from "@conform-to/react";
+import React from "react";
 
 vi.mock("@remix-run/react", () => ({
   useFetcher: vi.fn()

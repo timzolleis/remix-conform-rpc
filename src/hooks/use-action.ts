@@ -1,9 +1,9 @@
 import { z, ZodSchema } from 'zod';
-import { ActionFunction } from '@remix-run/server-runtime';
+import type { ActionFunction } from "@remix-run/server-runtime";
 import { useFetcher } from '@remix-run/react';
-import { FormEvent, useEffect } from 'react';
-import { ErrorResponse, isErrorResponse } from '../utils/error';
-import { DefaultValue, useForm } from '@conform-to/react';
+import { type FormEvent, useEffect } from 'react';
+import { type ErrorResponse, isErrorResponse } from '../utils/error.js';
+import { type DefaultValue, useForm } from '@conform-to/react';
 import { parseWithZod } from '@conform-to/zod';
 
 type ActionReturnType<TAction extends ActionFunction> = Awaited<ReturnType<TAction>>;

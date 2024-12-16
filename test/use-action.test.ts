@@ -1,5 +1,5 @@
-import { useAction } from '../src/hooks/use-action';
-import { beforeEach, describe, expect, it, vi, Mock } from 'vitest';
+import { useAction } from '../src/hooks/use-action.js';
+import { beforeEach, describe, expect, it, vi, type Mock } from 'vitest';
 import { useFetcher } from '@remix-run/react';
 import { act, renderHook } from '@testing-library/react';
 

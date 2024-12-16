@@ -1,7 +1,6 @@
-import { setupLoader } from '../src/server/setup-loader.server';
 import { describe, expect, it } from 'vitest';
 import { set, z, ZodError } from 'zod';
-import { setupAction } from '../src/server/setup-action.server';
+import { setupAction } from '../src/server/setup-action.server.js';
 
 describe('setup action', () => {
   it('should parse form data', async () => {

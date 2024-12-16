@@ -1,4 +1,4 @@
-import { setupLoader } from '../src/server/setup-loader.server';
+import { setupLoader } from '../src/server/setup-loader.server.js';
 import { describe, expect, it } from 'vitest';
 import { set, z, ZodError } from 'zod';
 

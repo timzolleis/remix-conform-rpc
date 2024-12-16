@@ -1,17 +1,26 @@
 {
   "name": "remix-conform-rpc",
-  "version": "1.0.0",
+  "version": "2.1.0",
   "author": {
     "name": "Tim Zolleis"
   },
   "license": "MIT",
   "description": "Supercharge your remix actions and loaders with typesafe param and query parsing using conform and zod",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "package.json",
+    "README.md"
   ],
+  "exports": {
+    "./server/response": "./dist/server/response.server.js",
+    "./server/action": "./dist/server/setup-action.server.js",
+    "./server/loader": "./dist/server/setup-loader.server.js",
+    "./utils": "./dist/utils/error.js",
+    "./hooks/action": "./dist/hooks/use-action.js"
+  },
+  "type": "module",
   "devDependencies": {
+    "@arethetypeswrong/cli": "^0.17.1",
     "@conform-to/dom": "^1.2.2",
     "@conform-to/react": "^1.2.2",
     "@conform-to/zod": "^1.2.2",
@@ -20,6 +29,7 @@
     "@remix-run/server-runtime": "^2.2.0",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/react": "^16.1.0",
+    "@total-typescript/tsconfig": "^1.0.4",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^8.52.0",
@@ -48,7 +58,8 @@
     "lint": "tsc",
     "publish": "npm publish",
     "publish-beta": "npm publish --tag beta",
-    "test": "vitest"
+    "test": "vitest",
+    "check-exports": "attw --pack ."
   },
   "repository": {
     "type": "git",
