@@ -37,7 +37,8 @@ You can define a loader by calling the `setupLoader` function and passing an obj
 ```typescript
 import { setupLoader } from "remix-conform-rpc/server/loader";
 
-export const loader = setupLoader({
+export const loader = (loaderArgs: LoaderFunctionArgs) => setupLoader({
+  loaderArgs,
   load: async ({ context, request }) => {
     return { message: "hello world" };
   }
@@ -55,7 +56,8 @@ function.
 import { setupLoader } from "remix-conform-rpc/server/loader";
 import { z } from "zod";
 
-export const loader = setupLoader({
+export const loader = (loaderArgs: LoaderFunctionArgs) => setupLoader({
+  loaderArgs,
   querySchema: z.object({
     page: z.coerce.number().optional()
   }),
@@ -66,7 +68,7 @@ export const loader = setupLoader({
     params.id; // string - typesafe
     query.page; // number | undefined - typesafe
 
-    return { message: "hello world", };
+    return { message: "hello world" };
   }
 });
 ```
@@ -80,7 +82,8 @@ functions arguments.
 import { setupLoader } from "remix-conform-rpc/server/loader";
 import { z } from "zod";
 
-export const loader = setupLoader({
+export const loader = (loaderArgs: LoaderFunctionArgs) => setupLoader({
+  loaderArgs,
   middleware: async ({ context, request }) => {
     const user = await getUserFromSession(request);
     return { user };
@@ -102,7 +105,8 @@ Define a loader with a zod schema to parse and validate the form data body.
 import { setupAction } from "remix-conform-rpc/server/action";
 import { z } from "zod";
 
-export const action = setupAction({
+export const action = (actionArgs: ActionFunctionArgs) => setupAction({
+  actionArgs,
   schema: z.object({
     email: z.string().email(),
     password: z.string().min(8)
@@ -135,7 +139,8 @@ The same way you can define loaders, you can define actions with params, query a
 import { setupAction } from "remix-conform-rpc/server/action";
 import { z } from "zod";
 
-export const action = () =>  setupAction({
+export const action = (actionArgs: ActionFunctionArgs) => setupAction({
+  actionArgs,
   schema: z.object({
     email: z.string().email(),
     password: z.string().min(8)
