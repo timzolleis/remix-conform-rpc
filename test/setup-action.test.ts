@@ -1,19 +1,19 @@
-import { describe, expect, it } from 'vitest';
-import { set, z, ZodError } from 'zod';
-import { setupAction } from '../src/server/setup-action.server.js';
+import { describe, expect, it } from "vitest";
+import { set, z, ZodError } from "zod";
+import { setupAction } from "../src/server/setup-action.server.js";
 
-describe('setup action', () => {
-  it('should parse form data', async () => {
+describe("setup action", () => {
+  it("should parse form data", async () => {
     const formData = new FormData();
-    formData.append('test', 'data');
-    formData.append('checkbox', 'on');
-    const context = {
-      request: new Request('http://localhost', { method: 'POST', body: formData }),
+    formData.append("test", "data");
+    formData.append("checkbox", "on");
+    const actionArgs = {
+      request: new Request("http://localhost", { method: "POST", body: formData }),
       context: {},
       params: {}
     };
     const result = await setupAction({
-      context,
+      actionArgs,
       schema: z.object({
         test: z.string(),
         checkbox: z.boolean()
@@ -22,22 +22,22 @@ describe('setup action', () => {
         return submission.value;
       }
     });
-    expect(result).toStrictEqual({ test: 'data', checkbox: true });
+    expect(result).toStrictEqual({ test: "data", checkbox: true });
   });
 
-  it('should parse params and query', async () => {
+  it("should parse params and query", async () => {
     const formData = new FormData();
-    formData.append('test', 'data');
-    formData.append('checkbox', 'on');
-    const context = {
-      request: new Request('http://localhost?query=value', { method: 'POST', body: formData }),
+    formData.append("test", "data");
+    formData.append("checkbox", "on");
+    const actionArgs = {
+      request: new Request("http://localhost?query=value", { method: "POST", body: formData }),
       context: {},
       params: {
-        params: 'value'
+        params: "value"
       }
     };
     const result = await setupAction({
-      context,
+      actionArgs,
       paramSchema: z.object({
         params: z.string()
       }),
@@ -53,24 +53,24 @@ describe('setup action', () => {
       }
     });
     expect(result).toStrictEqual({
-      submission: { test: 'data', checkbox: true },
-      params: { params: 'value' },
-      query: { query: 'value' }
+      submission: { test: "data", checkbox: true },
+      params: { params: "value" },
+      query: { query: "value" }
     });
   });
 
-  it('should throw an error parsing params', async () => {
+  it("should throw an error parsing params", async () => {
     const formData = new FormData();
-    formData.append('test', 'data');
-    formData.append('checkbox', 'on');
-    const context = {
-      request: new Request('http://localhost', { method: 'POST', body: formData }),
+    formData.append("test", "data");
+    formData.append("checkbox", "on");
+    const actionArgs = {
+      request: new Request("http://localhost", { method: "POST", body: formData }),
       context: {},
       params: {}
     };
     try {
       const result = await setupAction({
-        context,
+        actionArgs,
         paramSchema: z.object({
           test: z.string()
         }),
@@ -85,22 +85,22 @@ describe('setup action', () => {
       expect(true).toBe(false);
     } catch (error) {
       expect(error).toBeInstanceOf(Error);
-      expect((error as Error).message).toEqual('{"test":"Required"}');
+      expect((error as Error).message).toEqual("{\"test\":\"Required\"}");
     }
   });
 
-  it('should throw an error parsing query', async () => {
+  it("should throw an error parsing query", async () => {
     const formData = new FormData();
-    formData.append('test', 'data');
-    formData.append('checkbox', 'on');
-    const context = {
-      request: new Request('http://localhost', { method: 'POST', body: formData }),
+    formData.append("test", "data");
+    formData.append("checkbox", "on");
+    const actionArgs = {
+      request: new Request("http://localhost", { method: "POST", body: formData }),
       context: {},
       params: {}
     };
     try {
       const result = await setupAction({
-        context,
+        actionArgs,
         querySchema: z.object({
           test: z.string()
         }),
@@ -115,21 +115,21 @@ describe('setup action', () => {
       expect(true).toBe(false);
     } catch (error) {
       expect(error).toBeInstanceOf(Error);
-      expect((error as Error).message).toEqual('{"test":"Required"}');
+      expect((error as Error).message).toEqual("{\"test\":\"Required\"}");
     }
   });
 
-  it('should run action middleware', async () => {
+  it("should run action middleware", async () => {
     const formData = new FormData();
-    formData.append('test', 'data');
-    formData.append('checkbox', 'on');
-    const context = {
-      request: new Request('http://localhost', { method: 'POST', body: formData }),
+    formData.append("test", "data");
+    formData.append("checkbox", "on");
+    const actionArgs = {
+      request: new Request("http://localhost", { method: "POST", body: formData }),
       context: {},
       params: {}
     };
     const result = await setupAction({
-      context,
+      actionArgs,
       schema: z.object({
         test: z.string(),
         checkbox: z.boolean()
@@ -138,9 +138,9 @@ describe('setup action', () => {
         return { ...submission.value, user };
       },
       middleware: async () => {
-        return { user: 'test' };
+        return { user: "test" };
       }
     });
-    expect(result).toStrictEqual({ test: 'data', checkbox: true, user: 'test' });
+    expect(result).toStrictEqual({ test: "data", checkbox: true, user: "test" });
   });
 });

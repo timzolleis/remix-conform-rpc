@@ -22,7 +22,7 @@ interface SetupLoaderArgs<
   TResult,
   TMiddlewareResult
 > {
-  context: ActionFunctionArgs;
+  loaderArgs: LoaderFunctionArgs;
   paramSchema?: TParamSchema;
   querySchema?: TQuerySchema;
   load: (
@@ -37,17 +37,17 @@ async function setupLoader<
   TResult,
   TMiddlewareResult
 >({
-    context,
+    loaderArgs,
     querySchema,
     load,
     paramSchema,
     middleware
   }: SetupLoaderArgs<TParamSchema, TQuerySchema, TResult, TMiddlewareResult>) {
-  const params = paramSchema ? getParamsOrFail(context.params, paramSchema) : undefined;
-  const query = querySchema ? getSearchParamsOrFail(context.request, querySchema) : undefined;
+  const params = paramSchema ? getParamsOrFail(loaderArgs.params, paramSchema) : undefined;
+  const query = querySchema ? getSearchParamsOrFail(loaderArgs.request, querySchema) : undefined;
   const loadArgs: LoaderArguments<TParamSchema, TQuerySchema> = {
-    request: context.request,
-    context: context.context,
+    request: loaderArgs.request,
+    context: loaderArgs.context,
     ...(params && { params }),
     ...(query && { query })
   } as LoaderArguments<TParamSchema, TQuerySchema>;

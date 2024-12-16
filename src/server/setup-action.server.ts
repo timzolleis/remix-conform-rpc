@@ -1,12 +1,12 @@
-import type { ActionFunctionArgs } from '@remix-run/server-runtime';
+import type { ActionFunctionArgs } from "@remix-run/server-runtime";
 
-import { parseWithZod } from '@conform-to/zod';
+import { parseWithZod } from "@conform-to/zod";
 import { getParamsOrFail, getSearchParamsOrFail } from "remix-params-helper";
-import { z, ZodSchema } from 'zod';
-import { invalidSubmission } from './response.server.js';
-import type { SuccessfulSubmission } from '../utils/submission.js';
-import type { WithParams } from '../utils/with-params.js';
-import { respondWithError } from '../utils/error.js';
+import { z, ZodSchema } from "zod";
+import { invalidSubmission } from "./response.server.js";
+import type { SuccessfulSubmission } from "../utils/submission.js";
+import type { WithParams } from "../utils/with-params.js";
+import { respondWithError } from "../utils/error.js";
 
 type ActionArguments<
   TSchema extends ZodSchema,
@@ -29,7 +29,7 @@ interface SetupActionsArgs<
   TResult,
   TMiddlewareResult
 > {
-  context: ActionFunctionArgs;
+  actionArgs: ActionFunctionArgs;
   paramSchema?: TParamSchema;
   querySchema?: TQuerySchema;
   schema: TSchema;
@@ -47,26 +47,26 @@ async function setupAction<
   TResult,
   TMiddlewareResult
 >({
-  context,
+  actionArgs,
   schema,
   mutation,
   querySchema,
   paramSchema,
   middleware
 }: SetupActionsArgs<TSchema, TParamSchema, TQuerySchema, TResult, TMiddlewareResult>) {
-  const formData = await context.request.formData();
+  const formData = await actionArgs.request.formData();
   const submission = parseWithZod(formData, {
     schema
   });
   if (submission.status !== 'success') {
     return invalidSubmission(submission);
   }
-  const params = paramSchema ? getParamsOrFail(context.params, paramSchema) : undefined;
-  const query = querySchema ? getSearchParamsOrFail(context.request, querySchema) : undefined;
+  const params = paramSchema ? getParamsOrFail(actionArgs.params, paramSchema) : undefined;
+  const query = querySchema ? getSearchParamsOrFail(actionArgs.request, querySchema) : undefined;
   const mutationArgs: ActionArguments<TSchema, TParamSchema, TQuerySchema> = {
     submission: submission,
-    request: context.request,
-    context: context.context,
+    request: actionArgs.request,
+    context: actionArgs.context,
     ...(params && { params }),
     ...(query && { query })
   } as ActionArguments<TSchema, TParamSchema, TQuerySchema>;

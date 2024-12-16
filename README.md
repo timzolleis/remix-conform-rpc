@@ -135,7 +135,7 @@ The same way you can define loaders, you can define actions with params, query a
 import { setupAction } from "remix-conform-rpc/server/action";
 import { z } from "zod";
 
-export const action = setupAction({
+export const action = () =>  setupAction({
   schema: z.object({
     email: z.string().email(),
     password: z.string().min(8)
