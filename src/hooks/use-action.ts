@@ -31,10 +31,10 @@ function useAction<TAction extends ActionFunction, TSchema extends ZodSchema>(op
       if (isErrorResponse<ActionReturnType<TAction>>(fetcher.data)) {
         options.onError?.(fetcher.data);
       } else {
-        options.onSuccess?.(fetcher.data);
+        options.onSuccess?.(fetcher.data as Exclude<ActionReturnType<TAction>, ErrorResponse<ActionReturnType<TAction>>>);
       }
     }
-  }, [fetcher.data]);
+  }, [fetcher.state, fetcher.data]);
 
   return { submit, fetcher };
 }

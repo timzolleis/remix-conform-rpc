@@ -10,6 +10,8 @@ vi.mock("@remix-run/react", () => ({
   useFetcher: vi.fn()
 }));
 
+
+
 const setupFetcher = () => {
   const mockFetcher = {
     submit: vi.fn(),
