@@ -53,7 +53,7 @@ async function setupLoader<
   } as LoaderArguments<TParamSchema, TQuerySchema>;
   const middlewareResult = middleware ? await middleware(loadArgs) : undefined;
   try {
-    return load({ ...loadArgs, ...(middlewareResult as TMiddlewareResult extends undefined ? {} : TMiddlewareResult) });
+    return await load({ ...loadArgs, ...(middlewareResult as TMiddlewareResult extends undefined ? {} : TMiddlewareResult) });
   } catch (thrownValue) {
     if (thrownValue instanceof Response) {
       throw thrownValue;

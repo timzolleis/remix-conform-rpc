@@ -72,7 +72,7 @@ async function setupAction<
   } as ActionArguments<TSchema, TParamSchema, TQuerySchema>;
   const middlewareResult = middleware ? await middleware(mutationArgs) : undefined;
   try {
-    return mutation({
+    return await mutation({
       ...mutationArgs,
       ...(middlewareResult as TMiddlewareResult extends undefined ? {} : TMiddlewareResult)
     });
