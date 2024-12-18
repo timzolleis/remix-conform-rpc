@@ -1,24 +1,25 @@
-import { z, ZodSchema } from 'zod';
+import { z, ZodSchema } from "zod";
 import type { ActionFunction } from "@remix-run/server-runtime";
-import { useFetcher } from '@remix-run/react';
-import { type FormEvent, useEffect } from 'react';
-import { type ErrorResponse, isErrorResponse } from '../utils/error.js';
-import { type DefaultValue, useForm } from '@conform-to/react';
-import { parseWithZod } from '@conform-to/zod';
+import { useFetcher } from "@remix-run/react";
+import { type FormEvent, useEffect } from "react";
+import { type ErrorResponse, type InvalidSubmissionResponse, isErrorResponse } from "../utils/error.js";
+import { type DefaultValue, useForm } from "@conform-to/react";
+import { parseWithZod } from "@conform-to/zod";
+import type { Submission } from "@conform-to/dom";
 
 type ActionReturnType<TAction extends ActionFunction> = Awaited<ReturnType<TAction>>;
 
-interface UseActionOptions<TAction extends ActionFunction> {
+interface UseActionOptions<TAction extends ActionFunction, TSchema extends ZodSchema> {
   path?: string;
 
-  method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
+  method?: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
-  onSuccess?(response: ActionReturnType<TAction>): void;
+  onSuccess?(response: Exclude<ActionReturnType<TAction>, InvalidSubmissionResponse<ReturnType<Submission<z.infer<TSchema>>["reply"]>> | ErrorResponse<null>>): void;
 
-  onError?(response: ErrorResponse<ActionReturnType<TAction>>): void;
+  onError?(response: InvalidSubmissionResponse<ReturnType<Submission<z.infer<TSchema>>["reply"]>> | ErrorResponse<null>): void;
 }
 
-function useAction<TAction extends ActionFunction, TSchema extends ZodSchema>(options: UseActionOptions<TAction>) {
+function useAction<TAction extends ActionFunction, TSchema extends ZodSchema>(options: UseActionOptions<TAction, TSchema>) {
   const fetcher = useFetcher<TAction>();
   const submit = (data: z.infer<TSchema>) => {
     fetcher.submit(data, {
@@ -27,11 +28,11 @@ function useAction<TAction extends ActionFunction, TSchema extends ZodSchema>(op
     });
   };
   useEffect(() => {
-    if (fetcher.state === 'idle' && fetcher.data) {
-      if (isErrorResponse<ActionReturnType<TAction>>(fetcher.data)) {
+    if (fetcher.state === "idle" && fetcher.data) {
+      if (isErrorResponse(fetcher.data)) {
         options.onError?.(fetcher.data);
       } else {
-        options.onSuccess?.(fetcher.data as Exclude<ActionReturnType<TAction>, ErrorResponse<ActionReturnType<TAction>>>);
+        options.onSuccess?.(fetcher.data);
       }
     }
   }, [fetcher.state, fetcher.data]);
@@ -40,7 +41,7 @@ function useAction<TAction extends ActionFunction, TSchema extends ZodSchema>(op
 }
 
 interface UseActionFormOptions<TAction extends ActionFunction, TSchema extends ZodSchema>
-  extends UseActionOptions<TAction> {
+  extends UseActionOptions<TAction, TSchema> {
   schema: TSchema;
   onFormSubmit?: (event: FormEvent<HTMLFormElement>, data: z.infer<TSchema>) => void;
   defaultValue?: DefaultValue<z.infer<TSchema>>;
@@ -58,7 +59,7 @@ function useActionForm<TAction extends ActionFunction, TSchema extends ZodSchema
       });
     },
     onSubmit(event, { submission }) {
-      if (submission?.status !== 'success') {
+      if (submission?.status !== "success") {
         return;
       }
       options.onFormSubmit?.(event, submission.value);

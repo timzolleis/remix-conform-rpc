@@ -17,8 +17,8 @@ type ActionArguments<
   TQuerySchema,
   {
     submission: SuccessfulSubmission<z.infer<TSchema>>;
-    request: ActionFunctionArgs['request'];
-    context: ActionFunctionArgs['context'];
+    request: ActionFunctionArgs["request"];
+    context: ActionFunctionArgs["context"];
   }
 >;
 
@@ -47,18 +47,18 @@ async function setupAction<
   TResult,
   TMiddlewareResult
 >({
-  actionArgs,
-  schema,
-  mutation,
-  querySchema,
-  paramSchema,
-  middleware
-}: SetupActionsArgs<TSchema, TParamSchema, TQuerySchema, TResult, TMiddlewareResult>) {
+    actionArgs,
+    schema,
+    mutation,
+    querySchema,
+    paramSchema,
+    middleware
+  }: SetupActionsArgs<TSchema, TParamSchema, TQuerySchema, TResult, TMiddlewareResult>) {
   const formData = await actionArgs.request.formData();
   const submission = parseWithZod(formData, {
     schema
   });
-  if (submission.status !== 'success') {
+  if (submission.status !== "success") {
     return invalidSubmission(submission);
   }
   const params = paramSchema ? getParamsOrFail(actionArgs.params, paramSchema) : undefined;
@@ -76,13 +76,15 @@ async function setupAction<
       ...mutationArgs,
       ...(middlewareResult as TMiddlewareResult extends undefined ? {} : TMiddlewareResult)
     });
-  } catch (error) {
-    if (error instanceof Response) {
-      throw error;
+  } catch (thrownValue) {
+    if (thrownValue instanceof Response) {
+      throw thrownValue;
     }
-    return respondWithError(submission.reply(), {
-      message: error instanceof Error ? error.message : 'Unknown error'
+    return respondWithError(null, {
+      message: thrownValue instanceof Error ? thrownValue.message : "unknown_error",
+      code: 500
     });
+
   }
 }
 

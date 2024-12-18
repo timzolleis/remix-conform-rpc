@@ -1,29 +1,13 @@
-import { data } from '@remix-run/server-runtime';
-import type { Submission } from '@conform-to/dom';
+import type { Submission } from "@conform-to/dom";
+import { type InvalidSubmissionResponse, respondWithError } from "../utils/error.js";
 
-function errorResponse<T>({
-  submission,
-  error,
-  status
-}: {
-  submission?: Submission<T>;
-  error: unknown;
-  status?: number;
-}) {
-  return data({
-    result: submission?.reply(),
-    status: 'error',
-    error: error,
-    code: status ?? 500
-  });
+
+function invalidSubmission<T>(submission: Submission<T>): InvalidSubmissionResponse<ReturnType<Submission<T>["reply"]>> {
+  return respondWithError(submission.reply(), {
+    code: 400,
+    message: "invalid_submission",
+    type: "invalid_submission"
+  }) as InvalidSubmissionResponse<ReturnType<Submission<T>["reply"]>>;
 }
 
-function invalidSubmission<T>(submission: Submission<T>) {
-  return errorResponse({
-    submission,
-    error: 'invalid_submission',
-    status: 400
-  });
-}
-
-export { errorResponse, invalidSubmission };
+export { invalidSubmission };
