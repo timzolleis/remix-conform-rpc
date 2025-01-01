@@ -87,12 +87,15 @@ describe("useAction", () => {
     expect(fields.description.name).toBe("description");
     expect(fields.description.initialValue).toBe("testDescription");
     const form = result.current.form;
+    const expectedFormData = new FormData();
+    expectedFormData.append("name", "value");
+    expectedFormData.append("description", "value");
 
     act(() => {
       result.current.submit({ name: "value", description: "value" });
     });
 
-    expect(mockFetcher.submit).toHaveBeenCalledWith({ name: "value", description: "value" }, {
+    expect(mockFetcher.submit).toHaveBeenCalledWith(expectedFormData, {
       method: "POST",
       action: "/test"
     });
@@ -127,11 +130,15 @@ describe("useAction error", () => {
 
     const { result, rerender } = renderHook(() => useActionForm(options));
 
+    const expectedFormData = new FormData();
+    expectedFormData.append("name", "value");
+    expectedFormData.append("description", "description");
+
     act(() => {
       result.current.submit({ name: "value", description: "description" });
     });
 
-    expect(mockFetcher.submit).toHaveBeenCalledWith({ name: "value", description: "description" }, {
+    expect(mockFetcher.submit).toHaveBeenCalledWith(expectedFormData, {
       method: "POST",
       action: "/test"
     });

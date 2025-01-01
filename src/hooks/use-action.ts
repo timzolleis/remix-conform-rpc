@@ -6,6 +6,7 @@ import { type ErrorResponse, type InvalidSubmissionResponse, isErrorResponse } f
 import { type DefaultValue, useForm } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
 import type { Submission } from "@conform-to/dom";
+import { serializeToFormData } from "../utils/serialize-to-form-data.js";
 
 type ActionReturnType<TAction extends ActionFunction> = Awaited<ReturnType<TAction>>;
 
@@ -22,7 +23,7 @@ interface UseActionOptions<TAction extends ActionFunction, TSchema extends ZodSc
 function useAction<TAction extends ActionFunction, TSchema extends ZodSchema>(options: UseActionOptions<TAction, TSchema>) {
   const fetcher = useFetcher<TAction>();
   const submit = (data: z.infer<TSchema>) => {
-    fetcher.submit(data, {
+    fetcher.submit(serializeToFormData(data), {
       method: options.method,
       action: options.path
     });

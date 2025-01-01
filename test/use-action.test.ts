@@ -40,7 +40,9 @@ describe('useAction', () => {
       result.current.submit({ key: 'value' });
     });
 
-    expect(mockFetcher.submit).toHaveBeenCalledWith({ key: 'value' }, { method: 'POST', action: '/test' });
+    const expectedFormData = new FormData();
+    expectedFormData.append('key', 'value');
+    expect(mockFetcher.submit).toHaveBeenCalledWith(expectedFormData, { method: 'POST', action: '/test' });
 
     act(() => {
       mockFetcher.data = { success: true };
@@ -71,11 +73,14 @@ describe('useAction error', () => {
 
     const { result, rerender } = renderHook(() => useAction(options));
 
+    const expectedFormData = new FormData();
+    expectedFormData.append('key', 'value');
+
     act(() => {
       result.current.submit({ key: 'value' });
     });
 
-    expect(mockFetcher.submit).toHaveBeenCalledWith({ key: 'value' }, { method: 'POST', action: '/test' });
+    expect(mockFetcher.submit).toHaveBeenCalledWith(expectedFormData, { method: 'POST', action: '/test' });
 
     act(() => {
       mockFetcher.data = { status: 'error' };
