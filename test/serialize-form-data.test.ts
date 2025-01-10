@@ -131,7 +131,7 @@ describe("serializeToFormData", () => {
     expect(result).toBeInstanceOf(FormData);
     expect(result.get("string")).toBe("test");
     expect(result.get("number")).toBe("123");
-    expect(result.get("boolean")).toBe("true");
+    expect(result.get("boolean")).toBe("on");
     expect(result.get("nullValue")).toBe(null);
     expect(result.get("undefinedValue")).toBe(null);
   });
