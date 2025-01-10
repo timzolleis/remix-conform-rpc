@@ -37,9 +37,8 @@ function serializeData<T extends object>(data: T, path: PathEntry[], formData: F
     }
     return;
   }
-
   if (shouldAddData(data)) {
-    formData.append(constructPath(path), data);
+    formData.append(constructPath(path), serializePrimitive(data));
   }
 }
 
@@ -78,4 +77,14 @@ function constructPath(elements: PathEntry[]): string {
     }
     return `${element.key}${element.delimiter ? "." : ""}`;
   }).join("");
+}
+
+function serializePrimitive(value: unknown): string {
+  if (value instanceof Date) {
+    return value.toISOString();
+  }
+  if (typeof value === "boolean") {
+    return value ? "on" : "";
+  }
+  return String(value);
 }

@@ -174,6 +174,28 @@ describe("serializeToFormData", () => {
     expect(result.get("items[1].name")).toBe("Item 2");
     expect(result.get("items[1].value")).toBe("2");
   });
+  it ("should handle booleans", () => {
+    const testObject = {
+      some: {
+        nested: {
+          value: true,
+          otherValue: false
+        }
+      },
+      arrayOfBooleans: [{value: true}, {value: false}]
+    }
+
+    const result = serializeToFormData(testObject);
+    expect(result).toBeInstanceOf(FormData);
+    expect(result.get("some.nested.value")).toBe("on");
+    expect(result.get("some.nested.otherValue")).toBe(null);
+    expect(result.get("arrayOfBooleans[0].value")).toBe("on");
+    expect(result.get("arrayOfBooleans[1].value")).toBe(null);
+
+  })
+
+
+
 
 
 });
