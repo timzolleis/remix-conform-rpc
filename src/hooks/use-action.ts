@@ -1,6 +1,6 @@
 import { z, ZodSchema } from "zod";
 import type { ActionFunction } from "@remix-run/server-runtime";
-import { type FormEvent, useEffect } from "react";
+import { type FormEvent } from "react";
 import { type ErrorResponse, type InvalidSubmissionResponse, isSuccessResponse } from "../utils/error.js";
 import { type DefaultValue, useForm } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
@@ -25,22 +25,23 @@ interface UseActionOptions<TAction extends ActionFunction, TSchema extends ZodSc
 
 function useAction<TAction extends ActionFunction, TSchema extends ZodSchema>(options: UseActionOptions<TAction, TSchema>) {
   const fetcher = useFetcher<TAction>() as FetcherWithComponents<ActionReturnType<TAction>>;
+  function handleFetcherData() {
+    if (!fetcher.data) {
+      return;
+    }
+    if (isSuccessResponse(fetcher.data)) {
+      options.onSuccess?.(fetcher.data as SuccessResponseData<TAction, TSchema>);
+    } else {
+      options.onError?.(fetcher.data);
+    }
+  }
+
   const submit = (data: z.infer<TSchema>) => {
     fetcher.submit(serializeToFormData(data), {
       method: options.method,
       action: options.path
-    });
+    }).then(handleFetcherData);
   };
-  useEffect(() => {
-    if (fetcher.state === "idle" && fetcher.data) {
-      const response = fetcher.data;
-      if (isSuccessResponse(response)) {
-        options.onSuccess?.(response as SuccessResponseData<TAction, TSchema>);
-      } else {
-        options.onError?.(response);
-      }
-    }
-  }, [fetcher.state, fetcher.data]);
 
   return { submit, fetcher };
 }

@@ -10,11 +10,18 @@ vi.mock("react-router", () => ({
   useFetcher: vi.fn()
 }));
 
+function waitForFetcher() {
+  return new Promise((resolve) => setTimeout(resolve, 1));
+}
 
+
+function mockSubmit() {
+  return Promise.resolve();
+}
 
 const setupFetcher = () => {
   const mockFetcher = {
-    submit: vi.fn(),
+    submit: vi.fn(mockSubmit),
     state: "idle",
     data: null as any
   };
@@ -33,7 +40,8 @@ describe("useAction", () => {
 
   beforeEach(() => {
     (useFetcher as Mock).mockReturnValue(mockFetcher);
-    window.HTMLFormElement.prototype.submit = () => {}
+    window.HTMLFormElement.prototype.submit = () => {
+    };
   });
 
   it("should use the onSubmit event on the form", () => {
@@ -86,7 +94,6 @@ describe("useAction", () => {
     expect(fields.name.initialValue).toBe("test");
     expect(fields.description.name).toBe("description");
     expect(fields.description.initialValue).toBe("testDescription");
-    const form = result.current.form;
     const expectedFormData = new FormData();
     expectedFormData.append("name", "value");
     expectedFormData.append("description", "value");
@@ -105,6 +112,7 @@ describe("useAction", () => {
       mockFetcher.state = "idle";
       rerender();
     });
+await waitForFetcher();
 
     expect(onSuccess).toHaveBeenCalledWith({ success: true });
     expect(onError).not.toHaveBeenCalled();
@@ -148,6 +156,7 @@ describe("useAction error", () => {
       mockFetcher.state = "idle";
       rerender();
     });
+    await waitForFetcher();
 
     expect(onError).toHaveBeenCalledWith({ status: "error" });
     expect(onSuccess).not.toHaveBeenCalled();

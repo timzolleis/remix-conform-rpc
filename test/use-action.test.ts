@@ -3,13 +3,21 @@ import { beforeEach, describe, expect, it, vi, type Mock } from 'vitest';
 import { act, renderHook } from '@testing-library/react';
 import { useFetcher } from "react-router";
 
+function waitForFetcher() {
+  return new Promise((resolve) => setTimeout(resolve, 1));
+}
+
+
 vi.mock('react-router', () => ({
   useFetcher: vi.fn()
 }));
 
+function mockSubmit() {
+  return Promise.resolve();
+}
 const setupFetcher = () => {
   const mockFetcher = {
-    submit: vi.fn(),
+    submit: vi.fn(mockSubmit),
     state: 'idle',
     data: null as any
   };
@@ -17,7 +25,7 @@ const setupFetcher = () => {
   return mockFetcher;
 };
 
-describe('useAction', () => {
+describe('useAction', async () => {
   const mockFetcher = setupFetcher();
 
   beforeEach(() => {
@@ -43,13 +51,13 @@ describe('useAction', () => {
     const expectedFormData = new FormData();
     expectedFormData.append('key', 'value');
     expect(mockFetcher.submit).toHaveBeenCalledWith(expectedFormData, { method: 'POST', action: '/test' });
-
     act(() => {
       mockFetcher.data = { success: true };
       mockFetcher.state = 'idle';
       rerender();
     });
-
+    await waitForFetcher();
+    expect(onSuccess).toHaveBeenCalled();
     expect(onSuccess).toHaveBeenCalledWith({ success: true });
     expect(onError).not.toHaveBeenCalled();
   });
@@ -86,7 +94,8 @@ describe('useAction error', () => {
       mockFetcher.state = 'idle';
       rerender();
     });
-
+    await waitForFetcher();
+    expect(onError).toHaveBeenCalled()
     expect(onError).toHaveBeenCalledWith({ status: 'error' });
     expect(onSuccess).not.toHaveBeenCalled();
   });
