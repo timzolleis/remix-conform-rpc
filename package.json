@@ -1,11 +1,11 @@
 {
   "name": "remix-conform-rpc",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "author": {
     "name": "Tim Zolleis"
   },
   "license": "MIT",
-  "description": "Supercharge your remix actions and loaders with typesafe param and query parsing using conform and zod",
+  "description": "Supercharge your remix/react-router actions and loaders with typesafe param and query parsing using conform and zod",
   "files": [
     "dist",
     "package.json",
@@ -24,9 +24,7 @@
     "@conform-to/dom": "^1.2.2",
     "@conform-to/react": "^1.2.2",
     "@conform-to/zod": "^1.2.2",
-    "@remix-run/eslint-config": "^2.2.0",
-    "@remix-run/react": "^2.2.0",
-    "@remix-run/server-runtime": "^2.2.0",
+    "react-router": "^7.0.0",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/react": "^16.1.0",
     "@total-typescript/tsconfig": "^1.0.4",
@@ -38,17 +36,15 @@
     "react": "^18.3.0",
     "react-dom": "^18.3.0",
     "remix-params-helper": "^0.5.1",
-    "typescript": "^5.2.2",
-    "vitest": "^2.1.8",
-    "yarn": "^1.22.22",
-    "zod": "^3.22.4"
+    "typescript": "^5.7.3",
+    "vitest": "^3.0.4",
+    "zod": "^3.24.1"
   },
   "peerDependencies": {
     "@conform-to/dom": ">=1.2.2",
     "@conform-to/react": ">=1.2.2",
     "@conform-to/zod": ">=1.2.2",
-    "@remix-run/react": ">=2.0.0",
-    "@remix-run/server-runtime": ">=2.0.0",
+    "react-router": ">=7.0.0",
     "remix-params-helper": ">=0.5.1",
     "zod": ">=3"
   },
@@ -88,5 +84,5 @@
     "conform"
   ],
   "sideEffects": false,
-  "packageManager": "yarn@4.5.3"
+  "packageManager": "pnpm@8.15.1+sha1.8adba2d20330c02d3856e18c4eb3819d1d3ca6aa"
 }

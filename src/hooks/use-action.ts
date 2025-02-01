@@ -1,27 +1,30 @@
 import { z, ZodSchema } from "zod";
 import type { ActionFunction } from "@remix-run/server-runtime";
-import { useFetcher } from "@remix-run/react";
 import { type FormEvent, useEffect } from "react";
-import { type ErrorResponse, type InvalidSubmissionResponse, isErrorResponse } from "../utils/error.js";
+import { type ErrorResponse, type InvalidSubmissionResponse, isSuccessResponse } from "../utils/error.js";
 import { type DefaultValue, useForm } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
 import type { Submission } from "@conform-to/dom";
 import { serializeToFormData } from "../utils/serialize-to-form-data.js";
+import { type FetcherWithComponents, useFetcher } from "react-router";
 
 type ActionReturnType<TAction extends ActionFunction> = Awaited<ReturnType<TAction>>;
+
+export type SuccessResponseData<TAction extends ActionFunction, TSchema extends ZodSchema> = Exclude<ActionReturnType<TAction>, InvalidSubmissionResponse<ReturnType<Submission<z.infer<TSchema>>["reply"]>> | ErrorResponse<null>>;
+
 
 interface UseActionOptions<TAction extends ActionFunction, TSchema extends ZodSchema> {
   path?: string;
 
   method?: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
-  onSuccess?(response: Exclude<ActionReturnType<TAction>, InvalidSubmissionResponse<ReturnType<Submission<z.infer<TSchema>>["reply"]>> | ErrorResponse<null>>): void;
+  onSuccess?(response: SuccessResponseData<TAction, TSchema>): void;
 
-  onError?(response: InvalidSubmissionResponse<ReturnType<Submission<z.infer<TSchema>>["reply"]>> | ErrorResponse<null>): void;
+  onError?(response: InvalidSubmissionResponse<ReturnType<Submission<z.infer<TSchema>>["reply"]>> | ErrorResponse<unknown>): void;
 }
 
 function useAction<TAction extends ActionFunction, TSchema extends ZodSchema>(options: UseActionOptions<TAction, TSchema>) {
-  const fetcher = useFetcher<TAction>();
+  const fetcher = useFetcher<TAction>() as FetcherWithComponents<ActionReturnType<TAction>>;
   const submit = (data: z.infer<TSchema>) => {
     fetcher.submit(serializeToFormData(data), {
       method: options.method,
@@ -30,10 +33,11 @@ function useAction<TAction extends ActionFunction, TSchema extends ZodSchema>(op
   };
   useEffect(() => {
     if (fetcher.state === "idle" && fetcher.data) {
-      if (isErrorResponse(fetcher.data)) {
-        options.onError?.(fetcher.data);
+      const response = fetcher.data;
+      if (isSuccessResponse(response)) {
+        options.onSuccess?.(response as SuccessResponseData<TAction, TSchema>);
       } else {
-        options.onSuccess?.(fetcher.data);
+        options.onError?.(response);
       }
     }
   }, [fetcher.state, fetcher.data]);

@@ -1,4 +1,7 @@
 import type { Submission } from "@conform-to/dom";
+import type { ActionFunction } from "react-router";
+import type { ZodSchema } from "zod";
+import type { SuccessResponseData } from "../hooks/use-action.js";
 
 type RespondWithErrorOptions = {
   code?: number;
@@ -37,6 +40,11 @@ function isErrorResponse<TData>(response: any): response is ErrorResponse<TData>
   return response !== null && "status" in response && response.status === "error";
 }
 
+function isSuccessResponse<TAction extends ActionFunction, TSchema extends ZodSchema>(response: any): response is SuccessResponseData<TAction, TSchema> {
+  return !isErrorResponse(response);
+}
 
-export { respondWithError, isErrorResponse };
+
+
+export { respondWithError, isErrorResponse, isSuccessResponse };
 export type { ErrorResponse, InvalidSubmissionResponse };

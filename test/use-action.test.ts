@@ -1,9 +1,9 @@
 import { useAction } from '../src/hooks/use-action.js';
 import { beforeEach, describe, expect, it, vi, type Mock } from 'vitest';
-import { useFetcher } from '@remix-run/react';
 import { act, renderHook } from '@testing-library/react';
+import { useFetcher } from "react-router";
 
-vi.mock('@remix-run/react', () => ({
+vi.mock('react-router', () => ({
   useFetcher: vi.fn()
 }));
 
@@ -70,7 +70,6 @@ describe('useAction error', () => {
       onSuccess,
       onError
     };
-
     const { result, rerender } = renderHook(() => useAction(options));
 
     const expectedFormData = new FormData();
