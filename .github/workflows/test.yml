@@ -21,11 +21,11 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Set yarn version
-        run: corepack enable && yarn set version berry
+      - name: Enable corepack
+        run: corepack enable
 
       - name: Install dependencies
-        run: yarn install
+        run: pnpm install
 
       - name: Run tests
-        run: yarn test
+        run: pnpm test
